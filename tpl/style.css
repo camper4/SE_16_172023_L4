@@ -10,6 +10,10 @@
 	color: red
 }
 
+#error_message {
+	color: red
+}
+
 #mostra {
 	border: solid thin #882d13;
 	-webkit-border-radius: .7em;
