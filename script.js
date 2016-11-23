@@ -1,5 +1,9 @@
+//parte che va ad interagire con la parte grafica ***********************************
 var view = {
 	
+	/**
+ * @brief funzione che va a mostrare gli errori se alcuni campi inseriti non sono numerici
+ */
 	errori_num: function(){
 		if(isNaN(document.getElementById("id").value))
 			document.getElementById("id_error").setAttribute("style" , "display:block")
@@ -10,7 +14,7 @@ var view = {
 	},
 	
 	/**
-	* Funzione che, premuto il bottone SHOW o DISAPPEAR fa comparire o scomparire il form
+	* @brief Funzione che, premuto il bottone SHOW o DISAPPEAR fa comparire o scomparire il form
  */
 	show_form_button: function(){
 		//setto tutti i campi di input vuoti
@@ -32,50 +36,52 @@ var view = {
 			mostra_nascondi.setAttribute("style" , "display:none");
 			document.getElementById("mostra").innerHTML = "SHOW";
 		}
-	},
-	
-	
+	},	
 };
 
+
+//parte di creazione dei dati che riceveranno gli impiegati *************************************
 var data = {
 	//tabella impiegati
 	imp: new Array()
 };
 
 
-
+//parte che gestisce view e data e che controlla il tutto ***************************************
 var octopus = {
 	/**
- * funzione che si attiva quando viene premuto il pulsante di inserimento
+ * @brief funzione che si attiva quando viene premuto il pulsante di inserimento
  */
 	insert: function(){
-		if(isNaN(document.getElementById("id").value) || isNaN(document.getElementById("level").value) || isNaN(document.getElementById("salary").value)){
-			view.errori_num();}
-		else{
+		if(isNaN(document.getElementById("id").value) || isNaN(document.getElementById("level").value) || isNaN(document.getElementById("salary").value)) //controllo sull'inserimento numerico di alcuni campi
+			view.errori_num(); //se ho trovato dei campi non numerici
+		else{ //se i campi sono corretti mando la richiesta del forma al server
 			myform.action = "http://127.0.0.1:1337/insert";
 			myform.submit();
 		}
 	},
 	
+	
 	/**
- * funzione che si attiva quando viene premuto il pulsante di cancellazione
+ *  @brief funzione che si attiva quando viene premuto il pulsante di cancellazione
  */
 	delete: function(){
-		if(isNaN(document.getElementById("id").value))
+		if(isNaN(document.getElementById("id").value)) //controllo che id sia numerico
 			 view.errori_num();
-		else{
+		else{ //se i campi sono corretti mando la richiesta del forma al server
 			myform.action = "http://127.0.0.1:1337/delete";
 			myform.submit();
 		}
 	},
 	
+	
 	/**
- * funzione che si attiva quando viene premuto il pulsante di ricerca
+ *  @brief funzione che si attiva quando viene premuto il pulsante di ricerca
  */
 	search: function(){
-		if(isNaN(document.getElementById("id").value))
+		if(isNaN(document.getElementById("id").value)) //controllo che id sia numerico
 			 view.errori_num();
-		else{
+		else{ //se i campi sono corretti mando la richiesta del forma al server
 			myform.action = "http://127.0.0.1:1337/search";
 			myform.submit();
 		}
@@ -83,8 +89,9 @@ var octopus = {
 	
 	
 	/**
- * Funzione che ricevuto un id, ritorna l'indice di quell'impiegato se trovato, -1 altrimenti
- * @param in int id id in ingresso
+ * @brief Funzione che ricevuto un id, ritorna l'indice di quell'impiegato se trovato, -1 altrimenti
+ * @param in int id Id impiegato
+ * @return Ritorna l'indice dell'impiegato se trovato, altrimenti -1
  */
 	check_id: function(id){
 		var num_impiegati = data.imp.length; //quanti impiegati ho al momento salvati
@@ -100,7 +107,12 @@ var octopus = {
 	
 	
 	/**
- * funzione inserimento impiegato con controllo sul campo id
+ * @brief Funzione inserimento impiegato con controllo sul campo id
+ * @param in int id Id impiegato
+ * @param in String name Nome dell'impiegato
+ * @param in String surname Cognome dell'impiegato
+ * @param in int level Livello impiegato
+ * @param in int salary Salario impiegato
  */
 	insert_data: function(id , name , surname , level , salary){
 		var num_impiegati = data.imp.length; //quanti impiegati ho al momento salvati
@@ -138,21 +150,25 @@ var octopus = {
 				data.imp[num_impiegati].push(arguments[i]);
 			}
 		}
-		console.log(data.imp , "\n");
 	},
 	
 	
-	/**
- * funzione che ritorna le generalità dell'impiegato dall'indice fornito
+		/**
+ *  @brief funzione che ritorna le generalità dell'impiegato dall'indice fornito
  */
 	return_data: function(indice){
 		return data.imp[indice];
 	},
 	
 	
-	
-	/**
- * Controllo sui campi con primo parametro per differenziare i controlli
+			/**
+ *  @brief funzione con controllo dei campi inseriti
+ * @param in String tiporichiesta Parametro per differenziare il tipo di utilizzo funzione
+ * @param in int id Id impiegato
+ * @param in String name Nome dell'impiegato
+ * @param in String surname Cognome dell'impiegato
+ * @param in int level Livello impiegato
+ * @param in int salary Salario impiegato
  */
 	check_campi: function(tiporichiesta , id , name , surname , level , salary){
 		//se la richiesta arriva dal post dell'inserimento
@@ -173,12 +189,18 @@ var octopus = {
 		}
 	},
 	
+	
+	/**
+ * @brief Funzione che ricevuto un id, cancella l'impiegato corrispondente
+ * @param in int id Id impiegato
+ */
 	cancel_data: function(id){
 		data.imp.splice(id , 1);
-		console.log("cancell" , data.imp , "\n")
 	}
 };
 
+
+//esporto le funzioni che saranno necessarie al server
 exports.imp = data.imp;
 exports.insert_data = octopus.insert_data;
 exports.check_campi = octopus.check_campi;
