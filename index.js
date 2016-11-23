@@ -17,9 +17,14 @@ var octopus = require('./script.js'); //importo da script funzione inserimento v
 //setto la porta da utilizzare
 app.set('port', (process.env.PORT || 1337));
 
-//rendo accessibile al server il file script.js contenuto in tpl
+//rendo accessibile il file script.js
 app.get('/script.js', function(req,res){
 	res.sendFile('script.js' , { root : __dirname });
+});
+
+//rendo accessibile il file style.css
+app.get('/style.css', function(req,res){
+	res.sendFile('tpl/style.css' , { root : __dirname });
 });
 
 //creo server quando ricevo la prima richiesta in get immettendo l'indirizzo e la porta
@@ -76,7 +81,8 @@ app.post('/search', function(req, res){
 	indice = octopus.check_id(req.body.id);
 	if(indice < 0){
 		bind.toFile('tpl/base.tpl', {
-					error_message : 'id non trovato'
+					error_message : 'id non trovato',
+					visibilita: "display:none"
     		}, 
     		function(data){
         //write resonse

@@ -1,9 +1,25 @@
 var view = {
 	
+	errori_num: function(){
+		if(isNaN(document.getElementById("id").value))
+			document.getElementById("id_error").setAttribute("style" , "display:block")
+		if(isNaN(document.getElementById("level").value))
+			document.getElementById("level_error").setAttribute("style" , "display:block")
+		if(isNaN(document.getElementById("salary").value))
+			document.getElementById("salary_error").setAttribute("style" , "display:block")
+	},
+	
 	/**
 	* Funzione che, premuto il bottone SHOW o DISAPPEAR fa comparire o scomparire il form
  */
 	show_form_button: function(){
+		//setto tutti i campi di input vuoti
+		document.getElementById("id").value = "";
+		document.getElementById("name").value = "";
+		document.getElementById("surname").value = "";
+		document.getElementById("level").value = "";
+		document.getElementById("salary").value = "";
+		
 		//setto il messaggio di errore, se presente, a vuoto
 		document.getElementById('error_message').innerHTML = "";
 		
@@ -33,21 +49,36 @@ var octopus = {
  * funzione che si attiva quando viene premuto il pulsante di inserimento
  */
 	insert: function(){
-		myform.action = "http://127.0.0.1:1337/insert";
+		if(isNaN(document.getElementById("id").value) || isNaN(document.getElementById("level").value) || isNaN(document.getElementById("salary").value)){
+			view.errori_num();}
+		else{
+			myform.action = "http://127.0.0.1:1337/insert";
+			myform.submit();
+		}
 	},
 	
 	/**
  * funzione che si attiva quando viene premuto il pulsante di cancellazione
  */
 	delete: function(){
-		myform.action = "http://127.0.0.1:1337/delete";
+		if(isNaN(document.getElementById("id").value))
+			 view.errori_num();
+		else{
+			myform.action = "http://127.0.0.1:1337/delete";
+			myform.submit();
+		}
 	},
 	
 	/**
  * funzione che si attiva quando viene premuto il pulsante di ricerca
  */
 	search: function(){
-		myform.action = "http://127.0.0.1:1337/search";
+		if(isNaN(document.getElementById("id").value))
+			 view.errori_num();
+		else{
+			myform.action = "http://127.0.0.1:1337/search";
+			myform.submit();
+		}
 	},
 	
 	
@@ -146,8 +177,6 @@ var octopus = {
 		data.imp.splice(id , 1);
 		console.log("cancell" , data.imp , "\n")
 	}
-	
-	
 };
 
 exports.imp = data.imp;
